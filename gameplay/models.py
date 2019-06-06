@@ -6,6 +6,7 @@ class Game(models.Model):
     second_player = models.ForeignKey(User, related_name='games_second_player', on_delete=models.CASCADE)
     start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField(auto_now=True)
+    status = models.CharField(max_length=1, default='F')
 
 class Move(models.Model):
     x = models.IntegerField()
