@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import QuerySet, Q
 from django.contrib.auth.models import User
 
 GAME_STATUS_CHOICES = (
@@ -9,12 +10,21 @@ GAME_STATUS_CHOICES = (
     ('D', 'Draw')
 )
 
+class GameQuerySet(QuerySet):
+    def games_for_user(self, user):
+        return self.filter(Q(first_player=user) | Q(second_player=user))
+    
+    def active(self):
+        return self.filter(Q(status='F') | Q(status='S'))
+        
 class Game(models.Model):
     first_player = models.ForeignKey(User, related_name='games_first_player',on_delete=models.CASCADE)
     second_player = models.ForeignKey(User, related_name='games_second_player', on_delete=models.CASCADE)
     start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=1, default='F', choices=GAME_STATUS_CHOICES)
+
+    objects = GameQuerySet.as_manager()
 
     def __str__(self):
         return "{0} vs {1}".format(self.first_player, self.second_player)
