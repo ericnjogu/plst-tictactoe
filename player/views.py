@@ -6,4 +6,4 @@ from gameplay.models import Game
 def home(request):
     """respond to /home requests"""
     return render(request, "player/home.html",
-        {'ngames': Game.objects.count()})
+                  {'ngames': Game.objects.count()})
