@@ -2,7 +2,7 @@
 from django.conf.urls import re_path
 from django.contrib.auth.views import LoginView, LogoutView
 
-from .views import home
+from .views import home, new_invitation
 
 urlpatterns = [
     re_path('home$', home, name='player_home'),
@@ -11,5 +11,6 @@ urlpatterns = [
             name='player_login'),
     re_path('logout$',
             LogoutView.as_view(),
-            name='player_logout')
+            name='player_logout'),
+    re_path('invite$', new_invitation, name='new_player_invitation')
 ]
