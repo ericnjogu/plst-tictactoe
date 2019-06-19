@@ -3,8 +3,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
 from gameplay.models import Game
-from .forms import InvitationForm
 from player.models import Invitation
+from .forms import InvitationForm
 
 # Create your views here.
 
@@ -13,9 +13,12 @@ def home(request):
 
     all_my_games = Game.objects.games_for_user(request.user)
     active_games = all_my_games.active()
+    invites_received = request.user.invitations_received.all()
 
     return render(request, "player/home.html",
-                  {'games': active_games})
+                  {'games': active_games,
+                   'invites_received':invites_received
+                  })
 
 @login_required
 def new_invitation(request):

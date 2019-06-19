@@ -1,13 +1,32 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h1>Welcome {{user.username}}!</h1>
-    Your games:
-    <p>
-        <ul>
-            {% for g in games %}
-                <li>Game {{g.id}}: {{g.first_player}} vs {{g.second_player}}</li>
-            {%endfor%}
-        </ul>
-    </p>
-    <a href="{% url 'new_player_invitation' %}">Send an Invite</a>
+    <h2 class="text-primary">Welcome {{user.username}}!</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Your games:</h3>
+            <p>
+                <ul>
+                    {% for g in games %}
+                        <li>Game {{g.id}}: {{g.first_player}} vs {{g.second_player}}</li>
+                    {%endfor%}
+                </ul>
+            </p>
+            <a class="btn btn-primary" href="{% url 'new_player_invitation' %}">Send an Invite</a>
+        </div>
+
+        <div class="col-md-6">
+            <h3>Invitations</h3>
+            {% if invites_received %}
+                <div class='list-group'>
+                    {% for invite in invites_received %}
+                        <a class="list-group-item" href="">
+                            {{ invite.from_user.username }} has invited you to a game
+                        </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>You have no invitations</p>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}
