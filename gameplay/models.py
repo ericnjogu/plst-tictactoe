@@ -12,6 +12,8 @@ GAME_STATUS_CHOICES = (
     ('D', 'Draw')
 )
 
+BOARD_SIZE = 3
+
 class GameQuerySet(QuerySet):
     """DAO for Games, accessible via Game.objects"""
     def games_for_user(self, user):
@@ -35,15 +37,23 @@ class Game(models.Model):
     objects = GameQuerySet.as_manager()
 
     def get_absolute_url(self):
+        """ generate URL to this game instance """
         return reverse('game_detail', args=[self.id])
 
     def __str__(self):
         return "{0} vs {1}".format(self.first_player, self.second_player)
+
+    def board(self):
+        """ return 2D list of 'Move' objects """
+        board = [[None for x in range(BOARD_SIZE)] for y in range(BOARD_SIZE)]
+        for move in self.move_set.all():
+            board[move.x][move.y] = move
+        return board
 
 class Move(models.Model):
     """a tictactoe game move"""
     x = models.IntegerField()
     y = models.IntegerField()
     comments = models.CharField(max_length=300, blank=True)
-    by_first_player = models.BooleanField()
-    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    by_first_player = models.BooleanField(editable=False)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE, editable=False)
