@@ -128,6 +128,6 @@ STATICFILES_DIRS = [
 
 LOGIN_REDIRECT_URL = "player_home"
 LOGOUT_REDIRECT_URL = "tictactoe_welcome"
-LOGIN_URL='player_login'
+LOGIN_URL = 'player_login'
 
-CRISPY_TEMPLATE_PACK='bootstrap3'
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
