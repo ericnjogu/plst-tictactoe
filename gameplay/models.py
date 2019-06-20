@@ -50,6 +50,11 @@ class Game(models.Model):
             board[move.x][move.y] = move
         return board
 
+    def is_users_move(self, user):
+        """ true if the provided user is meant to make a move """
+        return (user == self.first_player and self.status == 'F') or\
+                (user == self.second_player and self.status == 'S')
+
 class Move(models.Model):
     """a tictactoe game move"""
     x = models.IntegerField()
