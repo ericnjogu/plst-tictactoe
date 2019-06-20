@@ -19,7 +19,7 @@
             {% if invites_received %}
                 <div class='list-group'>
                     {% for invite in invites_received %}
-                        <a class="list-group-item" href="">
+                        <a class="list-group-item" href="{% url 'accept_game_invitation' invite_id=invite.id %}">
                             {{ invite.from_user.username }} has invited you to a game
                         </a>
                     {% endfor %}

@@ -1,6 +1,7 @@
 """controller logic for player app"""
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 
 from gameplay.models import Game
 from player.models import Invitation
@@ -32,4 +33,26 @@ def new_invitation(request):
     else:
         form = InvitationForm()
     return render(request, "player/new_invitation_form.html", {'form': form})
+
+@login_required
+def accept_invitation(request, invite_id):
+    """ accept an a invitation """
+    invitation = get_object_or_404(Invitation, pk=invite_id)
+    if request.user != invitation.to_user:
+        raise PermissionDenied
+
+    if request.method == 'POST':
+        if 'accept' in request.POST:
+            Game.objects.create(
+                first_player=invitation.to_user,
+                second_player=invitation.from_user
+            )
+        invitation.delete()
+        return redirect('player_home')
+    else:
+        return render(
+            request,
+            'player/accept_invitation_form.html',
+            {'invitation':invitation}
+        )
     
