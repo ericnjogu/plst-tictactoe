@@ -43,12 +43,12 @@ def accept_invitation(request, invite_id):
 
     if request.method == 'POST':
         if 'accept' in request.POST:
-            Game.objects.create(
+            game = Game.objects.create(
                 first_player=invitation.to_user,
                 second_player=invitation.from_user
             )
         invitation.delete()
-        return redirect('player_home')
+        return redirect(game)
     else:
         return render(
             request,

@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}
+    {{game.first_player}} vs {{game.second_player}}
+{% endblock %}
+
+{% block content %}
+    Detail for Game ID {{game.id}}
+{% endblock %}
