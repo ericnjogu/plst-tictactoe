@@ -2,6 +2,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.decorators import login_required
+from django.views.generic.list import ListView
+
 from gameplay.models import Game
 from gameplay.forms import MoveForm
 
@@ -28,4 +30,8 @@ def make_move(request, game_id):
         return redirect(game)
     else:
         return render(request, 'gameplay/game_detail.html', {'game':game, 'form':form})
+
+class AllGames(ListView):
+    """ class based view example """
+    model = Game
     
