@@ -1,8 +1,8 @@
 """ url patterns"""
-from django.conf.urls import re_path
+from django.urls import re_path, path
 from django.contrib.auth.views import LoginView, LogoutView
 
-from .views import home, new_invitation, accept_invitation
+from .views import home, new_invitation, accept_invitation, SignupView
 
 urlpatterns = [
     re_path('home$', home, name='player_home'),
@@ -13,7 +13,8 @@ urlpatterns = [
             LogoutView.as_view(),
             name='player_logout'),
     re_path('invite$', new_invitation, name='new_player_invitation'),
-    re_path('accept_invitation/(?P<invite_id>\d+)$',
+    re_path(r'accept_invitation/(?P<invite_id>\d+)$',
             accept_invitation,
-            name='accept_game_invitation')
+            name='accept_game_invitation'),
+    path('signup', SignupView.as_view(), name='player_signup')
 ]
