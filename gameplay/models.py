@@ -63,7 +63,23 @@ class Game(models.Model):
         return Move(
             game=self,
             by_first_player=self.status == 'F'
-            )
+        )
+
+    def update_after_move(self, move):
+        """ update game status after a move """
+        self.status = self._get_game_status_after_move(move)
+
+    def _get_game_status_after_move(self, move):
+        x, y = move.x, move.y
+        board = self.board()
+        if (board[y][0] == board[y][1] == board[y][2]) or \
+            (board[0][x] == board[1][x] == board[2][x]) or \
+            (board[0][0] == board[1][1] == board[2][2]) or \
+            (board[0][2] == board[1][1] == board[2][0]):
+            return "W" if move.by_first_player else 'L'
+        if self.move_set.all().count() >= BOARD_SIZE ** 2:
+            return 'D'
+        return 'S' if self.status == 'F' else 'F'
 
 class Move(models.Model):
     """a tictactoe game move"""
@@ -76,3 +92,8 @@ class Move(models.Model):
     comments = models.CharField(max_length=300, blank=True)
     by_first_player = models.BooleanField(editable=False)
     game = models.ForeignKey(Game, on_delete=models.CASCADE, editable=False)
+
+    def save(self, *args, **kwargs):
+        super(Move, self).save(*args, **kwargs)
+        self.game.update_after_move(self)
+        self.game.save()

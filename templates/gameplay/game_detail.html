@@ -25,6 +25,17 @@
 
 {% block content %}
     <div class="col-md-5">
+        {% if game.status == 'F' %}
+            {{game.first_player}}'s turn
+        {% elif game.status == 'S' %}
+            {{game.second_player}}'s turn
+        {% elif game.status == 'W'%}
+            {{game.first_player}} won!
+        {% elif game.status == 'L' %}
+            {{game.second_player}} won!
+        {% elif game.status == 'D' %}
+            It's a draw
+        {% endif %}
         <table class="table table-bordered tictatoe-table">
             {% for row in game.board %}
                 <tr>
@@ -47,7 +58,7 @@
         {% load crispy_forms_tags %}
         <div class="col-md-4">
             <h3>It's your move</h3>
-            <form method="POST" action="">
+            <form method="POST" action="{% url 'game_make_move' game.id%}">
                 {{ form | crispy}}
                 {% csrf_token %}
                 <button type="submit">Move</button>
