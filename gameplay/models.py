@@ -3,6 +3,7 @@ from django.db import models
 from django.db.models import QuerySet, Q
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 GAME_STATUS_CHOICES = (
     ('F', 'First player to move'),
@@ -55,10 +56,23 @@ class Game(models.Model):
         return (user == self.first_player and self.status == 'F') or\
                 (user == self.second_player and self.status == 'S')
 
+    def new_move(self):
+        """ returns new move """
+        if self.status not in 'FS':
+            raise ValueError('cannot make move on finished game')
+        return Move(
+            game=self,
+            by_first_player=self.status == 'F'
+            )
+
 class Move(models.Model):
     """a tictactoe game move"""
-    x = models.IntegerField()
-    y = models.IntegerField()
+    x = models.IntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(BOARD_SIZE - 1)]
+    )
+    y = models.IntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(BOARD_SIZE - 1)]
+    )
     comments = models.CharField(max_length=300, blank=True)
     by_first_player = models.BooleanField(editable=False)
     game = models.ForeignKey(Game, on_delete=models.CASCADE, editable=False)
