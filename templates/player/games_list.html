@@ -1,7 +1,7 @@
 {% if games_list %}
     <div class="list-group bg-info">
         {% for game in games_list %}
-            <a class="list-group-item list-group-item-info" href="{{ g.get_absolute_url }}">
+            <a class="list-group-item list-group-item-info" href="{{ game.get_absolute_url }}">
                 {{game}}
                 {% if game.status not in 'FS' %}
                     {% if game.status == 'D' %}
